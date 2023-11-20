@@ -11,3 +11,50 @@ h1 {
 }
 
 
+#listaUsuarios {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
+  gap: 20px; 
+  padding: 20px;
+}
+
+#listaUsuarios li {
+  background: #ffffff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+  border-radius: 10px; 
+  overflow: hidden;
+  display: grid;
+  grid-template-areas:
+    "imagen contenido";
+  grid-template-columns: 150px 1fr; 
+  align-items: center;
+}
+
+#listaUsuarios img {
+  grid-area: imagen;
+  width: 100%; 
+  height: auto; 
+  object-fit: cover; 
+}
+
+#listaUsuarios .contenido {
+  grid-area: contenido;
+  padding: 20px;
+}
+
+#listaUsuarios h2,
+#listaUsuarios p {
+  margin: 5px 0; 
+}
+
+/
+body {
+  background: #eaeaea;
+  font-family: 'Arial', sans-serif; 
+  color: #333; /
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto; 
+}
