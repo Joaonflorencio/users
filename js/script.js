@@ -1,41 +1,62 @@
-async function obtenerUsuarios() {
-    try {
-        const respuesta = await fetch('https://jsonplaceholder.typicode.com/users');
-        const usuarios = await respuesta.json();
-        return usuarios;
-    } catch (error) {
-        console.error('Error al obtener los usuarios:', error);
-    }
-}
+const listaUsuarios = document.getElementById('listaUsuarios');
 
-function mostrarUsuariosEnDOM(usuarios) {
-    const listaUsuarios = document.getElementById('listaUsuarios');
-    usuarios.forEach(usuario => {
-        
-        usuario.edad = Math.floor(Math.random() * 100);
+// Obtener datos de la API de usuarios (simulado)
+fetch('https://jsonplaceholder.typicode.com/users')
+    .then(function (respuesta) {
+        if (!respuesta.ok) {
+            throw new Error('La solicitud no fue exitosa');
+        }
+        return respuesta.json();
+    })
+    .then(function (usuarios) {
+        // Crear un nuevo array con spread y añadir edades aleatorias
+        console.log('USERS',usuarios)
+        const usuariosConEdades = usuarios.map(function (usuario) {
+            return {
+                ...usuario,
+                age: generarEdadAleatoria(18, 50),
+                img: `${usuario.id}`,
+                company: usuario.company.name,
+                address: `${usuario.address.street}, ${usuario.address.suite}, ${usuario.address.city}`
+            };
+        });
 
-      
-        const elementoUsuario = document.createElement('li');
-        elementoUsuario.innerHTML = `
-            <img src="assets/img/${usuario.id}.jpeg" alt="Imagen del usuario">
-            <h2>${usuario.name} (${usuario.edad})</h2>
-            <p>Username: ${usuario.username}</p>
-            <p>Teléfono: ${usuario.phone}</p>
-            <p>Email: ${usuario.email}</p>
-            <p>Compañía: ${usuario.company.name}</p>
-            <p>Dirección: ${usuario.address.street}, ${usuario.address.suite}, ${usuario.address.city}</p>
-        `;
-
-       
-        listaUsuarios.appendChild(elementoUsuario);
+        // Mostrar detalles de cada usuario
+        usuariosConEdades.forEach(function (usuario) {
+            mostrarDetallesUsuario(usuario);
+            console.log(usuario)
+        });
+    })
+    .catch(function (error) {
+        console.error('Error al obtener datos de usuarios:', error.message);
     });
+
+// Función para generar una edad aleatoria entre min y max
+function generarEdadAleatoria(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+// Mostrar detalles de un usuario en la lista
+function mostrarDetallesUsuario({ name, age, username,img, phone, email, company, address }) {
 
-async function main() {
-    const usuarios = await obtenerUsuarios();
-    mostrarUsuariosEnDOM(usuarios);
+    const infoUsuario = `
+    <li class="usuario">
+    <div class="usuario-data">
+      <div class="usuario">
+          <strong>Nombre:</strong> ${name}<br>
+          <strong>Edad:</strong> ${age}<br>
+          <strong>Username:</strong> ${username}<br>
+          <strong>Teléfono:</strong> ${phone}<br>
+          <strong>Email:</strong> ${email}
+          </div>
+          <img src="../assets/img/${img}.jpeg" alt=""/>
+          </div>
+      <div>
+        <strong>Compañía:</strong> ${company}<br>
+        <strong>Dirección:</strong> ${address}
+      </div>
+    </li>
+    `;
+
+    listaUsuarios.innerHTML += infoUsuario;
 }
-
-
-main();
